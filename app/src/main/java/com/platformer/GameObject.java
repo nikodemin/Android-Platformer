@@ -3,6 +3,7 @@ package com.platformer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 public abstract class GameObject
 {
@@ -22,6 +23,10 @@ public abstract class GameObject
     private int facing;
     private boolean moves = false;
     private RectHitbox rectHitbox = new RectHitbox();
+
+    private Animation anim = null;
+    private boolean animated;
+    private int animFps = 1;
 
     public abstract void update(long fps, float gravity);
 
@@ -158,4 +163,38 @@ public abstract class GameObject
     {
         return rectHitbox;
     }
+
+    public void setAnimFps(int animFps)
+    {
+        this.animFps = animFps;
+    }
+    public void setAnimFrameCount(int animFrameCount)
+    {
+        this.animFrameCount = animFrameCount;
+    }
+    public boolean isAnimated()
+    {
+        return animated;
+    }
+
+    public void setAnimated(Context context, int pixelsPerMetre,
+                            boolean animated)
+    {
+        this.animated = animated;
+        this.anim = new Animation(context, bitmapName,
+                height,
+                width,
+                animFps,
+                animFrameCount,
+                pixelsPerMetre );
+    }
+
+    public Rect getRectToDraw(long deltaTime)
+    {
+        return anim.getCurrentFrame(
+                deltaTime,
+                xVelocity,
+                isMoves());
+    }
+
 }

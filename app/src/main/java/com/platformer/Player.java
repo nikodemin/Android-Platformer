@@ -36,6 +36,13 @@ public class Player extends GameObject
 
         setType('p');
         setBitmapName("player");
+
+        final int ANIMATION_FPS = 16;
+        final int ANIMATION_FRAME_COUNT = 5;
+        setAnimFps(ANIMATION_FPS);
+        setAnimFrameCount(ANIMATION_FRAME_COUNT);
+        setAnimated(context, pixelsPerMetre, true);
+
         setWorldLocation(worldStartX, worldStartY, 0);
         rectHitboxFeet = new RectHitbox();
         rectHitboxHead = new RectHitbox();

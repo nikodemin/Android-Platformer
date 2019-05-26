@@ -1,8 +1,10 @@
 package com.platformer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -144,11 +146,36 @@ public class PlatformView extends SurfaceView implements Runnable
                                         go.getWorldLocation().y,
                                         go.getWidth(),
                                         go.getHeight()));
-
-                        canvas.drawBitmap(
-                                lm.bitmapsArray[lm.getBitmapIndex(go.getType())],
-                                toScreen2d.left,
-                                toScreen2d.top, paint);
+                        if (go.isAnimated())
+                        {
+                            if (go.getFacing() == 1)
+                            {
+                                Matrix flipper = new Matrix();
+                                flipper.preScale(-1, 1);
+                                Rect r = go.getRectToDraw(System.currentTimeMillis());
+                                Bitmap b = Bitmap.createBitmap(
+                                        lm.bitmapsArray[lm.getBitmapIndex(go.getType())],
+                                        r.left,
+                                        r.top,
+                                        r.width(),
+                                        r.height(),
+                                        flipper,
+                                        true);
+                                canvas.drawBitmap(b, toScreen2d.left, toScreen2d.top, paint);
+                            }
+                            else
+                            {
+                                canvas.drawBitmap(
+                                        lm.bitmapsArray[lm.getBitmapIndex(go.getType())],
+                                        go.getRectToDraw(System.currentTimeMillis()),
+                                        toScreen2d, paint);
+                            }
+                        } else { // Just draw the whole bitmap
+                            canvas.drawBitmap(
+                                    lm.bitmapsArray[lm.getBitmapIndex(go.getType())],
+                                    toScreen2d.left,
+                                    toScreen2d.top, paint);
+                        }
                     }
 
             if (debugging)
